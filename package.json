@@ -1,0 +1,21 @@
+{
+  "name": "dynmodal",
+  "version": "1.0.0",
+  "description": "A Typescript app that dynamically generates Bootstrap 4 modals, inspired by Bootbox.js",
+  "author": "James Coon",
+  "license": "GNU GPLv3",
+  "dependencies": {
+    "bootstrap": "^4.1.2",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.1"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.1",
+    "@types/bootstrap": "^4.1.2",
+    "popper.js": "^1.14.1",
+    "grunt": "^1.0.3",
+    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
+    "grunt-ts": "^6.0.0-beta.21",
+    "typescript": "^3.1.6"
+  }
+}

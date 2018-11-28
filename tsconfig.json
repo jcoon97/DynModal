@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "rootDir": "src",
+    "strict": true,
+    "sourceMap": false,
+    "removeComments": true,
+    "outDir": "ts-build"
+  }
+}
