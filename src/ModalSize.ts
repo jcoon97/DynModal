@@ -8,8 +8,19 @@
  */
 namespace DynModal {
     export enum ModalSize {
+        /**
+         * The default modal size
+         */
         DEFAULT = "",
+
+        /**
+         * A small modal, as described in Bootstrap's documentation
+         */
         SMALL = "modal-sm",
+
+        /**
+         * A large modal, as described in Bootstrap's documentation
+         */
         LARGE = "modal-lg"
     }
 }

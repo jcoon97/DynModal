@@ -35,6 +35,10 @@ namespace DynModal {
             return this.sections[key] != undefined;
         }
 
+        public isTrue(key: string): boolean {
+            return (this.has(key) && this.get(key) == true);
+        }
+
         public remove(key: string): boolean {
             if(!this.has(key)) return false;
             delete this.sections[key];

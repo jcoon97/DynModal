@@ -42,7 +42,7 @@ namespace DynModal {
         };
 
         private id: number;
-        private builtModal: JQuery<HTMLElement> | null;
+        private currentModal: JQuery<HTMLElement>|null;
 
         private readonly options: any;
         private readonly sectionManager: SectionManager;
@@ -59,7 +59,7 @@ namespace DynModal {
             }
 
             this.id = 1;
-            this.builtModal = null;
+            this.currentModal = null;
 
             this.options = $.extend({}, this.DEFAULTS, options);
             this.sectionManager = new SectionManager();
@@ -70,45 +70,41 @@ namespace DynModal {
          * #show() or #hide() in the Core class.
          */
         public build(): Core {
-            let $modal = $(ModalTemplate.DIALOG);
-            $modal.attr("id", "dynmodal-" + this.id);
+            let builder = new ModalBuilder(this.id)
+                .addClass(ModalSection.DIALOG, (this.options.centerVertically) ? "modal-dialog-centered" : "")
+                .removeClass(ModalSection.BASE, (this.options.removeAnimation) ? "fade" : "")
+                .addClass(ModalSection.DIALOG, this.options.size);
 
-            // Inject the options from the constructor
-            if(this.options.centerVertically) $modal.find("div.modal-dialog").addClass("modal-dialog-centered");
-            if(this.options.removeAnimation) $modal.removeClass("fade");
-            $modal.find("div.modal-dialog").addClass(this.options.size);
-
-            // Set the title of the header
+            // Change the header title if the user specified
             if(this.sectionManager.has(SectionKey.HEADER_TITLE)) {
-                $modal.find("div.modal-header h5.modal-title")
-                    .text(this.sectionManager.get(SectionKey.HEADER_TITLE));
+                builder = builder.setText(ModalSection.HEADER_TITLE, this.sectionManager.get(SectionKey.HEADER_TITLE));
             }
 
-            // Append the close (times) button
-            if (this.sectionManager.has(SectionKey.HEADER_SHOW_CLOSE_BUTTON)
-                && this.sectionManager.get(SectionKey.HEADER_SHOW_CLOSE_BUTTON) == true) {
+            // Add the close button if the user specified
+            if(this.sectionManager.isTrue(SectionKey.HEADER_SHOW_CLOSE_BUTTON)) {
                 let $closeBtn = $(ModalTemplate.HEADER.CLOSE_BUTTON);
-                $modal.find("div.modal-header").append($closeBtn);
+                builder = builder.append(ModalSection.HEADER, false, $closeBtn);
             }
 
-            // Append the body
+            // Add the body text if the user specified
             if(this.sectionManager.has(SectionKey.BODY)) {
                 let $body = $(this.sectionManager.get(SectionKey.BODY));
-                $modal.find("div.modal-body").empty().append($body);
+                builder = builder.append(ModalSection.BODY, true, $body);
             }
 
-            // Append the footer
+            // Add the footer if the user specified
             let $footer = $(ModalTemplate.FOOTER.BASE);
 
             if(this.sectionManager.has(SectionKey.FOOTER)) {
-                let buttons = <Array<String>> this.sectionManager.get(SectionKey.FOOTER);
+                $footer.empty();
 
-                buttons.forEach((item) => {
+                (<Array<String>> this.sectionManager.get(SectionKey.FOOTER)).forEach((item) => {
                     let $btn = $(item);
 
                     if($btn.attr("data-close") != undefined) {
                         $btn.removeAttr("data-close");
                         $btn.attr("data-dismiss", "modal");
+                        $btn.attr("data-target", "dynmodal-" + this.id);
                     }
                     $btn.appendTo($footer);
                 });
@@ -116,12 +112,9 @@ namespace DynModal {
                 $footer.append(ModalTemplate.FOOTER.CLOSE);
             }
 
-            $modal.find("div.modal-content").append($footer);
-            this.builtModal = $modal;
-
-            if(typeof this.options.onBuilt == "function") {
-                this.options.onBuilt.call(this, this);
-            }
+            builder = builder.append(ModalSection.CONTENT, false, $footer);
+            this.currentModal = builder.create();
+            if(typeof this.options.onBuilt == "function") this.options.onBuilt.call(this, this);
             return this;
         }
 
@@ -146,10 +139,10 @@ namespace DynModal {
          * If one has not been built yet, an exception will be thrown instead
          */
         public getModal(): JQuery<HTMLElement> {
-            if(this.builtModal == null) {
+            if(this.currentModal == null) {
                 throw "You must build the modal first before you may retrieve its instance.";
             }
-            return this.builtModal;
+            return this.currentModal;
         }
 
         /**
@@ -172,7 +165,7 @@ namespace DynModal {
 
                 $modal.remove();
                 this.id += 1;
-                this.builtModal = null;
+                this.currentModal = null;
             });
         }
 
@@ -187,7 +180,7 @@ namespace DynModal {
          * @returns number the instance of the jQuery modal object
          */
         public show(): void {
-            if(this.builtModal == null) {
+            if(this.currentModal == null) {
                 throw "You must call the #build() function before you may show the modal";
             }
 
