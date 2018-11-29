@@ -1,5 +1,5 @@
 /**
-* DynModal v1.0.0 (https://github.com/jcoon97/dynmodal)
+* DynModal v1.0.1 (https://github.com/jcoon97/dynmodal)
 * Created by James Coon (https://github.com/jcoon97)
 * Copyright 2018 James Coon and all other Github Contributors
 * Licensed under GNU/GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
