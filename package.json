@@ -1,6 +1,6 @@
 {
   "name": "dynmodal",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Typescript app that dynamically generates Bootstrap 4 modals, inspired by Bootbox.js",
   "author": "James Coon",
   "license": "GNU GPLv3",

@@ -211,19 +211,18 @@ namespace DynModal {
          */
         public setBody(obj: any): Core {
             if(typeof obj == "function") {
-                if(typeof obj.call() == "undefined") {
-                    throw "You must return an HTML string to represent the modal body";
-                }
+                let result = obj.call();
 
-                let result: any = obj.call();
-
-                if(typeof result == "string") {
+                if((typeof result == "string") || (result instanceof jQuery)) {
+                    if(result instanceof jQuery) {
+                        result = result.clone();
+                    }
                     this.sectionManager.add(SectionKey.BODY, result);
                 } else {
-                    throw "You may only return a HTML string to be injected into the modal body";
+                    throw "You must return a valid object. Please review the documentation";
                 }
             } else {
-                throw "You may only pass in a function that returns a string as the argument";
+                throw "You must pass in an anonymous function as the argument";
             }
             return this;
         }
@@ -270,6 +269,16 @@ namespace DynModal {
         public setShowCloseButton(flag: boolean): Core {
             this.sectionManager.add(SectionKey.HEADER_SHOW_CLOSE_BUTTON, flag);
             return this;
+        }
+
+        /**
+         * Convenience method for grabbing the contents of an html element
+         * if it is currently wrapped inside of an HTML <template /> tag.
+         *
+         * @param selector the selector with which to search the DOM
+         */
+        public static fromTemplate(selector: string): JQuery<HTMLElement> {
+            return $($(selector).prop("content"));
         }
     }
 }

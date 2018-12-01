@@ -7,6 +7,7 @@ DynModal is a small application/plugin written in Typescript that dynamically cr
 * [Getting Started](#getting-started)
 * [Basic Examples](#basic-examples)
 * [Constructor Options](#constructor-options)
+* [Convenience Method(s)](#convenience-methods)
 * [Bug/Feature Requests](#bugfeature-requests)
 * [Contributing](#contributing)
 * [License](#license)
@@ -58,14 +59,19 @@ The `setBody(function)` function returns a callback inside the argument. This re
 })
 ...
 // Return a string via raw JavaScript
-setBody(function() {
+.setBody(function() {
     return document.getElementById("#foodTable").innerHTML;
 })
 ...
 // Return a string via a jQuery object
-setBody(function() {
+.setBody(function() {
     return $("body #foodTable").html();
 })
+...
+// Return a jQuery object that will be cloned
+.setBody(function() {
+    return $("#foodTable").clone();
+});
 ...
 ```
 Notice that the function only requires that a string containing HTML be passed back to it. It does not care how you obtain that information, so it is completely possible to generate it yourself, render it from an object on the page, or even load it via AJAX from an API server.
@@ -76,7 +82,7 @@ The footer of the modal almost always consist of a button or two. For this reaso
 
 ```js
 ...
-setFooter([
+.setFooter([
     "<button type='button' class-'btn btn-primary'>Save Changes</button>",
     "<button type='button' class='btn btn-danger' data-close>Close</button>"
 ])
@@ -130,6 +136,16 @@ Description: Called when the modal has been hidden. This callback could be invok
 Type: `function` <br/>
 Method Signature: `onHidden(id: number)`
 
+## Convenience Method(s)
+
+### fromTemplate
+Description: Retrieves a jQuery object containing the contents of the DOM object with the specified selector (if that object is an HTML5 `<template/>` tag. If is not, an error will be thrown. <br />
+Type: `static function` <br />
+Method Signature: `fromTemplate(selector: string): JQuery<HTMLElement>` <br />
+
+```js
+let $template = DynModal.Core.fromTemplate("template#foodTemplate");
+```
 
 ## Bug/Feature Requests
 No piece of software is without bugs, and DynModal is no different. With that said, if you wish to help make DynModal better and improve the user experience for everyone, we welcome bug reports and, if you are also a developer, you may also submit a pull request at any time.
