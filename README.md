@@ -1,4 +1,4 @@
-# DynModal v1.0.1
+# DynModal v1.0.2
 DynModal is a small application/plugin written in Typescript that dynamically creates Bootstrap 4 modals without the need to inject raw HTML into each page you wish for a modal to appear.
 
 
